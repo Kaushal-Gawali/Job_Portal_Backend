@@ -3,10 +3,11 @@ spring:
     name: job-portal
 
   datasource:
-    url: jdbc:mysql://localhost:3306/jobportal?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: root
-    password: root
+    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
+    username: ${MYSQLUSER}
+    password: ${MYSQLPASSWORD}
     driver-class-name: com.mysql.cj.jdbc.Driver
+
   jpa:
     hibernate:
       ddl-auto: validate
@@ -15,6 +16,7 @@ spring:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
+
   flyway:
     enabled: true
     locations: classpath:db/migration
@@ -25,16 +27,16 @@ spring:
       max-request-size: 5MB
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 jwt:
-  secret: ${JWT_SECRET:change-this-in-prod-to-a-long-random-string}
+  secret: ${JWT_SECRET}
   expiration-ms: 3600000
   refresh-expiration-ms: 604800000
 
 app:
   cors:
-    allowed-origin: http://localhost:5173
+    allowed-origin: ${FRONTEND_URL:http://localhost:5173}
 
   file:
     upload-dir: ./uploads/resumes
