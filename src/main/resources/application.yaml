@@ -1,22 +1,20 @@
 spring:
-  application:
-    name: job-portal
-
   datasource:
-    url: jdbc:mysql://${MYSQLHOST}:${MYSQLPORT}/${MYSQLDATABASE}?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true
-    username: ${MYSQLUSER}
-    password: ${MYSQLPASSWORD}
+    url: ${DB_URL:jdbc:mysql://localhost:3306/jobportal?useSSL=false&serverTimezone=UTC&allowPublicKeyRetrieval=true}
+    username: ${DB_USERNAME:root}
+    password: ${DB_PASSWORD:root}
     driver-class-name: com.mysql.cj.jdbc.Driver
-
   jpa:
     hibernate:
-      ddl-auto: update
-    show-sql: true
+      ddl-auto: validate
+    show-sql: false
     properties:
       hibernate:
         format_sql: true
         dialect: org.hibernate.dialect.MySQLDialect
-
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
   servlet:
     multipart:
       max-file-size: 5MB
@@ -26,14 +24,13 @@ server:
   port: ${PORT:8080}
 
 jwt:
-  secret: ${JWT_SECRET}
-  expiration-ms: 3600000
-  refresh-expiration-ms: 604800000
+  secret: ${JWT_SECRET:change-this-in-prod-to-a-long-random-string}
+  expiration-ms: ${JWT_EXPIRATION_MS:3600000}
+  refresh-expiration-ms: ${JWT_REFRESH_EXPIRATION_MS:604800000}
 
 app:
   cors:
-    allowed-origin: ${FRONTEND_URL:http://localhost:5173}
-
+    allowed-origin: ${CORS_ALLOWED_ORIGIN:http://localhost:5173}
   file:
-    upload-dir: ./uploads/resumes
+    upload-dir: ${FILE_UPLOAD_DIR:./uploads/resumes}
     max-size-mb: 5
